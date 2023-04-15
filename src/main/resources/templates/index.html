@@ -31,8 +31,27 @@
             </div>
         </div>
     </nav>
-    <div class="container mt-2">
-        <h3>Проект job4j_accidents</h3>
+    <div class="container">
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">Адрес</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="acc: ${accidents}">
+                    <td th:text="${acc.id}" />
+                    <td th:text="${acc.name}"></td>
+                    <td th:text="${acc.text}"/>
+                    <td th:text="${acc.address}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 </body>
