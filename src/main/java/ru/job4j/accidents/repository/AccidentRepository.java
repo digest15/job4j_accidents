@@ -8,4 +8,11 @@ public interface AccidentRepository {
 
     Collection<Accident> list();
 
+    Accident add(Accident accident);
+
+    Accident findById(int id);
+
+    boolean update(Accident accident);
+
+    boolean delete(int id);
 }

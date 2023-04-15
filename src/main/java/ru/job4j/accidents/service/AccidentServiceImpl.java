@@ -17,4 +17,24 @@ public class AccidentServiceImpl implements AccidentService {
     public Collection<Accident> list() {
         return accidentRepository.list();
     }
+
+    @Override
+    public Accident add(Accident accident) {
+        return accidentRepository.add(accident);
+    }
+
+    @Override
+    public Accident findById(int id) {
+        return accidentRepository.findById(id);
+    }
+
+    @Override
+    public boolean update(Accident accident) {
+        return accidentRepository.update(accident);
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return accidentRepository.delete(id);
+    }
 }
