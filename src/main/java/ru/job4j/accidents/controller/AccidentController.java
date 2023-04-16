@@ -15,7 +15,8 @@ public class AccidentController {
     private final AccidentService accidentService;
 
     @GetMapping("/create")
-    public String viewCreateAccident() {
+    public String viewCreateAccident(Model model) {
+        model.addAttribute("types", accidentService.listTypes());
         return "accident/createAccident";
     }
 
@@ -28,6 +29,7 @@ public class AccidentController {
     @GetMapping("/{id}")
     public String edit(Model model, @PathVariable int id) {
         model.addAttribute("accident", accidentService.findById(id));
+        model.addAttribute("types", accidentService.listTypes());
         return "accident/editAccident";
     }
 
