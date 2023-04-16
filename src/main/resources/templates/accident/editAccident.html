@@ -57,6 +57,16 @@
                                     th:selected="${type.id} == *{type?.id}"></option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="type.id" name="rIds">Статья</label>
+                        <select class="form-control" id="rIds" name="rIds" multiple>
+                            <option th:each="rule: ${rules}"
+                                    th:text="${rule.name}"
+                                    th:value="${rule.id}"
+                                    th:selected="${accident.rules.contains(rule)}">
+                            </option>
+                        </select>
+                    </div>
                     <div class="col-4"><button type="submit" class="btn btn-primary w-100">Сохранить</button></div>
                     <div class="col-4"><a class="btn btn-danger w-100" th:href="@{/accident/delete/{id}(id=${id})}">Удалить</a></div>
                 </form>

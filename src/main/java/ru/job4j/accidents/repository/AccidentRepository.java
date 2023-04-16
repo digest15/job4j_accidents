@@ -1,5 +1,6 @@
 package ru.job4j.accidents.repository;
 
+import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
 
@@ -18,4 +19,6 @@ public interface AccidentRepository {
     boolean delete(int id);
 
     Collection<AccidentType> listTypes();
+
+    Collection<Rule> listRules();
 }

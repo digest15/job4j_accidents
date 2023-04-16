@@ -1,6 +1,7 @@
 package ru.job4j.accidents.repository;
 
 import org.springframework.stereotype.Repository;
+import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
 
@@ -18,26 +19,59 @@ public class AccidentMem implements AccidentRepository{
 
     private final Map<Integer, AccidentType> types = new HashMap<>();
 
+    private final Map<Integer, Rule> rules = new HashMap<>();
+
     public AccidentMem() {
         initData();
     }
 
     private void initData() {
+        rules.put(1, new Rule(1, "Статья. 1"));
+        rules.put(2, new Rule(2, "Статья. 2"));
+        rules.put(3, new Rule(3, "Статья. 3"));
+
         types.put(1, new AccidentType(1, "Две машины"));
         types.put(2, new AccidentType(2, "Машина и человек"));
         types.put(3, new AccidentType(3, "Машина и велосипед"));
         types.put(4, new AccidentType(4, "Только человек"));
 
-        add(new Accident(0, "Петр Арсентьев", "Собирает хворост в лесу", "Где-то под Воронежом", new AccidentType(4, null)));
-        add(new Accident(0, "Башаров", "Смотрит шпили", "Солсбери", new AccidentType(4, null)));
-        add(new Accident(0, "Петров", "Смотрит шпили", "Солсбери", new AccidentType(4, null)));
-        add(new Accident(0, "Чипига", "Не исполняет приказы", "Москва", new AccidentType(4, null)));
+        add(new Accident(
+                0,
+                "Петр Арсентьев",
+                "Собирает хворост в лесу",
+                "Где-то под Воронежом",
+                types.get(4),
+                Set.of(rules.get(1), rules.get(2))
+        ));
+        add(new Accident(
+                0,
+                "Башаров",
+                "Смотрит шпили",
+                "Солсбери",
+                types.get(4),
+                Set.of(rules.get(1), rules.get(2))
+        ));
+        add(new Accident(
+                0,
+                "Петров",
+                "Смотрит шпили",
+                "Солсбери",
+                types.get(4),
+                Set.of(rules.get(1), rules.get(2))));
+        add(new Accident(
+                0,
+                "Чипига",
+                "Не исполняет приказы",
+                "Москва",
+                types.get(4),
+                Set.of(rules.get(1), rules.get(2))));
     }
 
     @Override
     public Collection<Accident> list() {
         return data.values().stream()
-                .map(this::setAccidentType)
+                .map(this::refreshAccidentType)
+                .map(this::refreshAccidentRules)
                 .collect(Collectors.toList());
     }
 
@@ -52,7 +86,8 @@ public class AccidentMem implements AccidentRepository{
     @Override
     public Accident findById(int id) {
         return Optional.ofNullable(data.get(id))
-                .map(this::setAccidentType)
+                .map(this::refreshAccidentType)
+                .map(this::refreshAccidentRules)
                 .orElse(null);
     }
 
@@ -71,8 +106,21 @@ public class AccidentMem implements AccidentRepository{
         return new ArrayList<>(types.values());
     }
 
-    private Accident setAccidentType(Accident accident) {
+    @Override
+    public Collection<Rule> listRules() {
+        return new ArrayList<>(rules.values());
+    }
+
+    private Accident refreshAccidentType(Accident accident) {
         accident.setType(types.get(accident.getType().getId()));
+        return accident;
+    }
+
+    private Accident refreshAccidentRules(Accident accident) {
+        Set<Rule> refRule = accident.getRules().stream()
+                .map(rule -> rules.get(rule.getId()))
+                .collect(Collectors.toSet());
+        accident.setRules(refRule);
         return accident;
     }
 }
