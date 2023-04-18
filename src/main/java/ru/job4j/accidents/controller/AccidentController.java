@@ -9,6 +9,7 @@ import ru.job4j.accidents.service.AccidentService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/accident")
@@ -33,7 +34,13 @@ public class AccidentController {
 
     @GetMapping("/{id}")
     public String edit(Model model, @PathVariable int id) {
-        model.addAttribute("accident", accidentService.findById(id).orElseGet(Accident::new));
+        Optional<Accident> accident = accidentService.findById(id);
+        if (accident.isEmpty()) {
+            model.addAttribute("message", String.format("Not found accident by id %s", id));
+            return "errors/404";
+        }
+
+        model.addAttribute("accident", accident.get());
         model.addAttribute("types", accidentService.listTypes());
         model.addAttribute("rules", accidentService.listRules());
         return "accident/editAccident";
