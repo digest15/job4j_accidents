@@ -51,7 +51,7 @@
                     <td th:text="${acc.id}" />
                     <td><a th:text="${acc.name}" th:href="@{/accident/{id}(id=${acc.id})}" /></td>
                     <td th:text="${acc.text}"/>
-                    <td th:text="${acc?.type.name}"/>
+                    <td th:text="${acc.type?.name}"/>
                     <td th:text="${acc.address}"/>
                 </tr>
                 </tbody>
