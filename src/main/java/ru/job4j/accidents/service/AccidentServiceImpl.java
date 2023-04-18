@@ -9,6 +9,7 @@ import ru.job4j.accidents.repository.AccidentRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,20 +32,37 @@ public class AccidentServiceImpl implements AccidentService {
     @Override
     public Accident add(Accident accident, String[] ids) {
         Set<Rule> rules = Arrays.stream(ids)
-                .map(str -> new Rule(Integer.parseInt(str), null))
+                .map(str -> accidentRepository.getRuleById(Integer.parseInt(str)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toSet());
         accident.setRules(rules);
+
+        AccidentType accidentType = accidentRepository.getTypeById(accident.getType().getId())
+                .orElse(null);
+        accident.setType(accidentType);
 
         return add(accident);
     }
 
     @Override
-    public Accident findById(int id) {
+    public Optional<Accident> findById(int id) {
         return accidentRepository.findById(id);
     }
 
     @Override
-    public boolean update(Accident accident) {
+    public boolean update(Accident accident, String[] ids) {
+        Set<Rule> rules = Arrays.stream(ids)
+                .map(str -> accidentRepository.getRuleById(Integer.parseInt(str)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+        accident.setRules(rules);
+
+        AccidentType accidentType = accidentRepository.getTypeById(accident.getType().getId())
+                .orElse(null);
+        accident.setType(accidentType);
+
         return accidentRepository.update(accident);
     }
 
@@ -61,5 +79,15 @@ public class AccidentServiceImpl implements AccidentService {
     @Override
     public Collection<Rule> listRules() {
         return accidentRepository.listRules();
+    }
+
+    @Override
+    public Optional<AccidentType> getTypeById(int id) {
+        return accidentRepository.getTypeById(id);
+    }
+
+    @Override
+    public Optional<Rule> getRuleById(int id) {
+        return accidentRepository.getRuleById(id);
     }
 }

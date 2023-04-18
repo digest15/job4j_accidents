@@ -8,7 +8,6 @@ import ru.job4j.accidents.model.AccidentType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Repository
 public class AccidentMem implements AccidentRepository{
@@ -69,10 +68,7 @@ public class AccidentMem implements AccidentRepository{
 
     @Override
     public Collection<Accident> list() {
-        return data.values().stream()
-                .map(this::refreshAccidentType)
-                .map(this::refreshAccidentRules)
-                .collect(Collectors.toList());
+        return new ArrayList<>(data.values());
     }
 
     @Override
@@ -84,11 +80,8 @@ public class AccidentMem implements AccidentRepository{
     }
 
     @Override
-    public Accident findById(int id) {
-        return Optional.ofNullable(data.get(id))
-                .map(this::refreshAccidentType)
-                .map(this::refreshAccidentRules)
-                .orElse(null);
+    public Optional<Accident> findById(int id) {
+        return Optional.ofNullable(data.get(id));
     }
 
     @Override
@@ -111,16 +104,13 @@ public class AccidentMem implements AccidentRepository{
         return new ArrayList<>(rules.values());
     }
 
-    private Accident refreshAccidentType(Accident accident) {
-        accident.setType(types.get(accident.getType().getId()));
-        return accident;
+    @Override
+    public Optional<AccidentType> getTypeById(int id) {
+        return Optional.ofNullable(types.get(id));
     }
 
-    private Accident refreshAccidentRules(Accident accident) {
-        Set<Rule> refRule = accident.getRules().stream()
-                .map(rule -> rules.get(rule.getId()))
-                .collect(Collectors.toSet());
-        accident.setRules(refRule);
-        return accident;
+    @Override
+    public Optional<Rule> getRuleById(int id) {
+        return Optional.ofNullable(rules.get(id));
     }
 }

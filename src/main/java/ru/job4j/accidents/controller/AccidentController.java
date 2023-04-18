@@ -33,7 +33,7 @@ public class AccidentController {
 
     @GetMapping("/{id}")
     public String edit(Model model, @PathVariable int id) {
-        model.addAttribute("accident", accidentService.findById(id));
+        model.addAttribute("accident", accidentService.findById(id).orElseGet(Accident::new));
         model.addAttribute("types", accidentService.listTypes());
         model.addAttribute("rules", accidentService.listRules());
         return "accident/editAccident";
@@ -41,7 +41,8 @@ public class AccidentController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute Accident accident, HttpServletRequest req) {
-        accidentService.update(accident);
+        String[] ids = req.getParameterValues("rIds");
+        accidentService.update(accident, ids);
         return "redirect:/";
     }
 
