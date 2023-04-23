@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
+import ru.job4j.accidents.repository.AccidentHibernate;
 import ru.job4j.accidents.repository.AccidentRepository;
 
 import java.util.Arrays;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AccidentServiceImpl implements AccidentService {
 
-    private final AccidentRepository accidentRepository;
+    private final AccidentHibernate accidentRepository;
 
     @Override
     public Collection<Accident> list() {

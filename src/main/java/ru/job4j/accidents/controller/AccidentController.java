@@ -8,7 +8,6 @@ import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.service.AccidentService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
