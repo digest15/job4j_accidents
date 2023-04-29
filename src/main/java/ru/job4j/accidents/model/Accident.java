@@ -15,6 +15,13 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "accidents")
+@NamedEntityGraph(
+        name = "accident.detail",
+        attributeNodes = {
+                @NamedAttributeNode("type"),
+                @NamedAttributeNode("rules")
+        }
+)
 public class Accident {
     @EqualsAndHashCode.Include
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,8 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
-import ru.job4j.accidents.repository.AccidentHibernate;
-import ru.job4j.accidents.repository.AccidentRepository;
+import ru.job4j.accidents.repository.AccidentCrudRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,16 +17,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AccidentServiceImpl implements AccidentService {
 
-    private final AccidentHibernate accidentRepository;
+    private final AccidentCrudRepository accidentRepository;
 
     @Override
     public Collection<Accident> list() {
-        return accidentRepository.list();
+        return (Collection<Accident>) accidentRepository.findAll();
     }
 
     @Override
     public Accident add(Accident accident) {
-        return accidentRepository.add(accident);
+        return accidentRepository.save(accident);
     }
 
     @Override
@@ -38,10 +37,6 @@ public class AccidentServiceImpl implements AccidentService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
         accident.setRules(rules);
-
-        AccidentType accidentType = accidentRepository.getTypeById(accident.getType().getId())
-                .orElse(null);
-        accident.setType(accidentType);
 
         return add(accident);
     }
@@ -64,12 +59,14 @@ public class AccidentServiceImpl implements AccidentService {
                 .orElse(null);
         accident.setType(accidentType);
 
-        return accidentRepository.update(accident);
+        accidentRepository.save(accident);
+
+        return true;
     }
 
     @Override
     public boolean delete(int id) {
-        return accidentRepository.delete(id);
+        return accidentRepository.delete(id) > 0;
     }
 
     @Override
