@@ -1,7 +1,7 @@
 package ru.job4j.accidents.service;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.User;
@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class RegistrationServiceImpl implements RegistrationService {
 
     private final PasswordEncoder encoder;
@@ -20,21 +21,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public Optional<User> createUser(User user) {
-        User savedUser;
+        Optional<User> savedUser = Optional.empty();
         try {
             user.setEnabled(true);
             user.setPassword(encoder.encode(user.getPassword()));
             user.setAuthority(authorityRepository.findByAuthority("ROLE_USER"));
-            savedUser = userRepository.save(user);
+            savedUser = Optional.of(userRepository.save(user));
         } catch (Exception e) {
-            if (e.getCause() instanceof ConstraintViolationException) {
-                savedUser = null;
-            } else {
-                throw e;
-            }
+            log.error("Was exception when create user", e);
         }
 
-        return Optional.ofNullable(savedUser);
+        return savedUser;
     }
 
 }
