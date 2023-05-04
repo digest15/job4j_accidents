@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.accidents.model.User;
 import ru.job4j.accidents.service.RegistrationService;
 
+import java.util.Optional;
+
 @Controller
 @AllArgsConstructor
 public class RegistrationController {
@@ -17,14 +19,15 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String regSave(@ModelAttribute User user, Model model) {
-        if (registrationService.userExist(user)) {
+        Optional<User> savedUser = registrationService.createUser(user);
+
+        if (savedUser.isEmpty()) {
             String errorMessage = String.format("User with username - %s already exist!", user.getUsername());
             model.addAttribute("errorMessage", errorMessage);
 
             return "users/create";
         }
 
-        registrationService.createUser(user);
         return "redirect:/login";
     }
 
