@@ -9,12 +9,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
-@Configuration
+/*@Configuration
 @PropertySource("classpath:db.properties")
-@EnableTransactionManagement
+@EnableTransactionManagement*/
 public class JdbcConfig {
 
-    @Bean
+    /*@Bean*/
     public DataSource ds(@Value("${jdbc.driver}") String driver,
                          @Value("${jdbc.url}") String url,
                          @Value("${jdbc.username}") String username,
@@ -27,7 +27,7 @@ public class JdbcConfig {
         return ds;
     }
 
-    @Bean
+    /*@Bean*/
     public JdbcTemplate jdbc(DataSource ds) {
         return new JdbcTemplate(ds);
     }
